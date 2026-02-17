@@ -24,9 +24,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      toast.error('❌ Backend Node.js not running. Start it on http://localhost:8080');
+      toast.error('❌ Le serveur ne répond pas. Démarrez-le sur http://localhost:8080');
     } else {
-      const message = error.response?.data?.message || 'An error occurred';
+      const message = error.response?.data?.message || 'Une erreur est survenue';
       toast.error(message);
     }
     return Promise.reject(error);

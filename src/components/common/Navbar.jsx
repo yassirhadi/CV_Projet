@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FaUser, FaSignOutAlt, FaHome, FaChartBar, FaUsers } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaHome, FaChartBar, FaUsers, FaUserShield } from 'react-icons/fa';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated, hasRole } = useAuth();
@@ -23,34 +23,38 @@ const Navbar = () => {
           {isAuthenticated() ? (
             <>
               <Link to="/profile" className="nav-link">
-                <FaUser /> {user?.nom || 'Profile'}
+                <FaUser /> Mon profil
+                {user?.nom ? <span className="nav-profile-name">({user.nom})</span> : null}
               </Link>
 
               {hasRole('ETUDIANT') && (
                 <Link to="/etudiant/dashboard" className="nav-link">
-                  <FaChartBar /> Dashboard
+                  <FaChartBar /> Tableau de bord
                 </Link>
               )}
 
               {hasRole('ADMIN') && (
                 <>
                   <Link to="/admin/dashboard" className="nav-link">
-                    <FaChartBar /> Dashboard
+                    <FaChartBar /> Tableau de bord
                   </Link>
                   <Link to="/admin/utilisateurs" className="nav-link">
-                    <FaUsers /> Users
+                    <FaUsers /> Utilisateurs
                   </Link>
                 </>
               )}
 
               <button onClick={handleLogout} className="nav-logout">
-                <FaSignOutAlt /> Logout
+                <FaSignOutAlt /> Déconnexion
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-link">Login</Link>
-              <Link to="/register" className="nav-link">Register</Link>
+              <Link to="/admin/login" className="nav-link">
+                <FaUserShield /> Admin
+              </Link>
+              <Link to="/login" className="nav-link">Connexion</Link>
+              <Link to="/register" className="nav-link">Inscription</Link>
             </>
           )}
         </div>

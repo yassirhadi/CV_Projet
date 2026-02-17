@@ -96,6 +96,30 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, motDePasse } = req.body;
 
+    // ============================
+    // Compte ADMIN statique
+    // ============================
+    if (email === 'admin@gmail.com' && motDePasse === '2026@2026') {
+      const role = 'ADMIN';
+      const fakeAdminUser = {
+        id: 0,
+        nom: 'Admin',
+        email,
+        role
+      };
+
+      const token = jwt.sign(
+        { id: fakeAdminUser.id, email: fakeAdminUser.email, role },
+        'secret_key_temporaire',
+        { expiresIn: '24h' }
+      );
+
+      return res.json({
+        token,
+        user: fakeAdminUser
+      });
+    }
+
     const [users] = await db.promise().query(
       'SELECT * FROM utilisateur WHERE email = ?',
       [email]
@@ -154,6 +178,49 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // ============================================
+// Réinitialisation du mot de passe (par email - étudiant)
+// ============================================
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const { email, nouveauMotDePasse } = req.body;
+
+    if (!email || !nouveauMotDePasse) {
+      return res.status(400).json({ message: 'Email et nouveau mot de passe requis' });
+    }
+
+    // Vérifier si l'email existe et correspond à un étudiant (pas admin)
+    const [users] = await db.promise().query(`
+      SELECT u.id, u.password, a.id as adminId
+      FROM utilisateur u
+      LEFT JOIN administrateur a ON u.id = a.id
+      WHERE u.email = ?
+    `, [email]);
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "Cet email n'existe pas (email لا يوجد)" });
+    }
+
+    const user = users[0];
+
+    if (user.adminId) {
+      return res.status(403).json({ message: 'Cette fonctionnalité est réservée aux étudiants' });
+    }
+
+    const hashedPassword = await bcrypt.hash(nouveauMotDePasse, 10);
+
+    await db.promise().query(
+      'UPDATE utilisateur SET password = ? WHERE id = ?',
+      [hashedPassword, user.id]
+    );
+
+    return res.json({ message: 'Mot de passe réinitialisé avec succès' });
+  } catch (error) {
+    console.error('❌ Erreur reset mot de passe:', error);
+    return res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+// ============================================
 // Récupérer tous les utilisateurs
 // ============================================
 app.get('/api/admin/utilisateurs', async (req, res) => {
@@ -197,6 +264,46 @@ app.get('/api/utilisateurs/:id', async (req, res) => {
     res.json(users[0]);
   } catch (error) {
     console.error('❌ Erreur récupération utilisateur:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+// ============================================
+// Changer le mot de passe (étudiant / utilisateur)
+// ============================================
+app.put('/api/utilisateurs/:id/mot-de-passe', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { ancienMotDePasse, nouveauMotDePasse } = req.body;
+
+    if (!ancienMotDePasse || !nouveauMotDePasse) {
+      return res.status(400).json({ message: 'Ancien et nouveau mot de passe requis' });
+    }
+
+    const [users] = await db.promise().query(
+      'SELECT id, password FROM utilisateur WHERE id = ?',
+      [id]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    const user = users[0];
+    const validPassword = await bcrypt.compare(ancienMotDePasse, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ message: 'Ancien mot de passe incorrect' });
+    }
+
+    const hashedPassword = await bcrypt.hash(nouveauMotDePasse, 10);
+    await db.promise().query(
+      'UPDATE utilisateur SET password = ? WHERE id = ?',
+      [hashedPassword, id]
+    );
+
+    res.json({ message: 'Mot de passe modifié avec succès' });
+  } catch (error) {
+    console.error('❌ Erreur changement mot de passe:', error);
     res.status(500).json({ message: 'Erreur serveur' });
   }
 });

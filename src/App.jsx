@@ -7,6 +7,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/common/Navbar';
 import PrivateRoute from './components/common/PrivateRoute';
 import Login from './components/auth/Login';
+import AdminLogin from './components/auth/AdminLogin';
 import Register from './components/auth/Register';
 import Profile from './components/utilisateur/Profile';
 import DashboardEtudiant from './components/etudiant/DashboardEtudiant';
@@ -27,6 +28,7 @@ function App() {
           <Routes>
             {/* Routes publiques */}
             <Route path="/login" element={<Login />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/register" element={<Register />} />
             
             {/* Routes protégées */}
@@ -36,7 +38,18 @@ function App() {
             <Route path="/admin/utilisateurs" element={<PrivateRoute roles={['ADMIN']}><GestionUtilisateurs /></PrivateRoute>} />
             
             {/* Accueil */}
-            <Route path="/" element={<div className="home">Accueil</div>} />
+            <Route path="/" element={
+              <div className="home-container">
+                <div className="home-content">
+                  <h1 className="home-title">Bienvenue sur CV Platform</h1>
+                  <p className="home-subtitle">Analysez et optimisez votre CV avec l'intelligence artificielle</p>
+                  <div className="home-buttons">
+                    <a href="/register" className="home-btn primary">Commencer maintenant</a>
+                    <a href="/login" className="home-btn secondary">Se connecter</a>
+                  </div>
+                </div>
+              </div>
+            } />
           </Routes>
         </div>
       </AuthProvider>

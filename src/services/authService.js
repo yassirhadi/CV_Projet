@@ -25,6 +25,18 @@ const authService = {
     }
   },
 
+  resetPassword: async (email, newPassword) => {
+    try {
+      const response = await api.post('/auth/reset-password', {
+        email,
+        nouveauMotDePasse: newPassword
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
