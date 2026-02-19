@@ -13,7 +13,6 @@ const DashboardAdmin = () => {
     totalCVs: 0,
     totalAnalyses: 0
   });
-  const [recentUsers, setRecentUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,13 +21,8 @@ const DashboardAdmin = () => {
 
   const fetchAdminData = async () => {
     try {
-      // جلب الإحصائيات
       const statsRes = await api.get('/admin/stats');
       setStats(statsRes.data);
-
-      // جلب آخر المستخدمين
-      const usersRes = await api.get('/admin/utilisateurs?limit=10');
-      setRecentUsers(usersRes.data);
     } catch (error) {
       console.error('Erreur chargement admin:', error);
     } finally {
@@ -40,10 +34,18 @@ const DashboardAdmin = () => {
 
   return (
     <div className="admin-dashboard">
-      <h1>Dashboard Administrateur</h1>
-      <p className="welcome">Bienvenue, {user?.nom || 'Admin'}!</p>
+      <div className="admin-header">
+        <div>
+          <h1>Dashboard Administrateur</h1>
+          <p className="welcome">Bienvenue, {user?.nom || 'Admin'}!</p>
+        </div>
+        <div className="admin-header-actions">
+          <Link to="/admin/utilisateurs" className="action-link">
+            Gérer les utilisateurs
+          </Link>
+        </div>
+      </div>
 
-      {/* Statistiques */}
       <div className="stats-container">
         <div className="stat-card">
           <FaUsers className="stat-icon" />
@@ -79,47 +81,19 @@ const DashboardAdmin = () => {
         </div>
       </div>
 
-      {/* Liste des utilisateurs */}
-      <div className="users-section">
-        <h2>Liste des utilisateurs</h2>
-        <div className="users-table">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Rôle</th>
-                <th>Université</th>
-                <th>CVs</th>
-                <th>Date inscription</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentUsers.map(user => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td><strong>{user.nom}</strong></td>
-                  <td>{user.email}</td>
-                  <td>
-                    <span className={`role-badge ${user.role === 'ADMIN' ? 'admin' : 'etudiant'}`}>
-                      {user.role === 'ADMIN' ? <FaUserShield /> : <FaUserGraduate />}
-                      {user.role}
-                    </span>
-                  </td>
-                  <td>{user.universite || '-'}</td>
-                  <td>{user.nb_cv || 0}</td>
-                  <td>{new Date(user.dateInscription).toLocaleDateString('fr-FR')}</td>
-                  <td>
-                    <button className="btn-view" title="Voir détails">
-                      <FaEye />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="admin-info-cards">
+        <div className="admin-info-card">
+          <h2>Vue d'ensemble</h2>
+          <p>
+            Surveillez rapidement le nombre total d&apos;utilisateurs, de CVs déposés et d&apos;analyses effectuées.
+          </p>
+        </div>
+        <div className="admin-info-card">
+          <h2>Gestion détaillée</h2>
+          <p>
+            Pour voir, filtrer et modifier les utilisateurs, utilisez la page{' '}
+            <Link to="/admin/utilisateurs">Admin &gt; Utilisateurs</Link>.
+          </p>
         </div>
       </div>
     </div>

@@ -61,41 +61,26 @@ const UploadCV = () => {
 
     setUploading(true);
 
-    // Simuler l'upload (remplacer par appel API réel)
-    setTimeout(() => {
-      setUploading(false);
-      setUploadSuccess(true);
-      toast.success('CV uploadé avec succès!');
-      
-      // Rediriger après 2 secondes
-      setTimeout(() => {
-        navigate('/etudiant/mes-cvs');
-      }, 2000);
-    }, 2000);
-
-    // Version avec API réelle (à décommenter quand backend prêt)
-    /*
     try {
-      const formData = new FormData();
-      formData.append('cv', file);
-      formData.append('nomFichier', file.name);
-
-      const response = await api.post('/cvs/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      await api.post('/cvs/upload', {
+        nomFichier: file.name,
       });
 
       setUploading(false);
       setUploadSuccess(true);
-      toast.success('CV uploadé avec succès!');
-      
+
+      const currentCount = parseInt(localStorage.getItem('cvCount') || '0', 10);
+      localStorage.setItem('cvCount', String(currentCount + 1));
+
+      toast.success('CV uploadé avec succès !');
+
       setTimeout(() => {
-        navigate('/etudiant/mes-cvs');
+        navigate('/etudiant/dashboard');
       }, 2000);
     } catch (error) {
       setUploading(false);
       toast.error('Erreur lors de l\'upload');
     }
-    */
   };
 
   return (
@@ -160,28 +145,6 @@ const UploadCV = () => {
             )}
           </div>
         )}
-      </div>
-
-      {/* Exemples de CV */}
-      <div className="examples-section">
-        <h3>Exemples de CV pour vous inspirer</h3>
-        <div className="examples-grid">
-          <div className="example-card">
-            <FaFilePdf className="example-icon pdf" />
-            <h4>CV Développeur Full Stack</h4>
-            <button className="btn-download">Télécharger</button>
-          </div>
-          <div className="example-card">
-            <FaFileWord className="example-icon word" />
-            <h4>CV Data Scientist</h4>
-            <button className="btn-download">Télécharger</button>
-          </div>
-          <div className="example-card">
-            <FaFilePdf className="example-icon pdf" />
-            <h4>CV Marketing Digital</h4>
-            <button className="btn-download">Télécharger</button>
-          </div>
-        </div>
       </div>
     </div>
   );

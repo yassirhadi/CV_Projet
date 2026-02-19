@@ -56,7 +56,7 @@ const AdminLogin = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="admin@gmail.com"
+                placeholder="emaild'administrateur"
                 required
               />
             </div>

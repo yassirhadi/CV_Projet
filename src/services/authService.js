@@ -37,6 +37,15 @@ const authService = {
     }
   },
 
+  checkEmail: async (email) => {
+    try {
+      const response = await api.post('/auth/check-email', { email });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

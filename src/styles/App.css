@@ -359,6 +359,31 @@ body {
   padding: 0 2rem;
 }
 
+.admin-dashboard {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.welcome {
+  color: rgba(31, 41, 55, 0.8);
+  margin-top: 0.5rem;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .nav-profile-name {
   font-size: 0.85rem;
   color: rgba(31, 41, 55, 0.7);

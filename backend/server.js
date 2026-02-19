@@ -221,6 +221,41 @@ app.post('/api/auth/reset-password', async (req, res) => {
 });
 
 // ============================================
+// Vérifier si un email étudiant existe (sans changer le mot de passe)
+// ============================================
+app.post('/api/auth/check-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email requis' });
+    }
+
+    const [users] = await db.promise().query(`
+      SELECT u.id, a.id as adminId
+      FROM utilisateur u
+      LEFT JOIN administrateur a ON u.id = a.id
+      WHERE u.email = ?
+    `, [email]);
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "Cet email n'existe pas (email لا يوجد)" });
+    }
+
+    const user = users[0];
+
+    if (user.adminId) {
+      return res.status(403).json({ message: 'Cette fonctionnalité est réservée aux étudiants' });
+    }
+
+    return res.json({ message: 'Email existant', id: user.id });
+  } catch (error) {
+    console.error('❌ Erreur vérification email:', error);
+    return res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
+
+// ============================================
 // Récupérer tous les utilisateurs
 // ============================================
 app.get('/api/admin/utilisateurs', async (req, res) => {

@@ -9,10 +9,12 @@ import PrivateRoute from './components/common/PrivateRoute';
 import Login from './components/auth/Login';
 import AdminLogin from './components/auth/AdminLogin';
 import Register from './components/auth/Register';
+import ForgotPassword from './components/auth/ForgotPassword';
 import Profile from './components/utilisateur/Profile';
 import DashboardEtudiant from './components/etudiant/DashboardEtudiant';
 import DashboardAdmin from './components/administrateur/DashboardAdmin';
 import GestionUtilisateurs from './components/administrateur/GestionUtilisateurs';
+import UploadCV from './components/etudiant/UploadCV';
 
 // Styles
 import './styles/App.css';
@@ -30,10 +32,12 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
             
             {/* Routes protégées */}
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="/etudiant/dashboard" element={<PrivateRoute roles={['ETUDIANT']}><DashboardEtudiant /></PrivateRoute>} />
+            <Route path="/etudiant/upload-cv" element={<PrivateRoute roles={['ETUDIANT']}><UploadCV /></PrivateRoute>} />
             <Route path="/admin/dashboard" element={<PrivateRoute roles={['ADMIN']}><DashboardAdmin /></PrivateRoute>} />
             <Route path="/admin/utilisateurs" element={<PrivateRoute roles={['ADMIN']}><GestionUtilisateurs /></PrivateRoute>} />
             
