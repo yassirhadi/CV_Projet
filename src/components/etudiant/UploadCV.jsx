@@ -30,9 +30,9 @@ const UploadCV = () => {
         return;
       }
 
-      // Vérifier la taille (max 5MB)
-      if (selectedFile.size > 5 * 1024 * 1024) {
-        toast.error('Fichier trop volumineux. Maximum 5MB');
+      // Vérifier la taille (max 10MB)
+      if (selectedFile.size > 10 * 1024 * 1024) {
+        toast.error('Fichier trop volumineux. Maximum 10MB');
         e.target.value = '';
         return;
       }
@@ -69,9 +69,6 @@ const UploadCV = () => {
       setUploading(false);
       setUploadSuccess(true);
 
-      const currentCount = parseInt(localStorage.getItem('cvCount') || '0', 10);
-      localStorage.setItem('cvCount', String(currentCount + 1));
-
       toast.success('CV uploadé avec succès !');
 
       setTimeout(() => {
@@ -86,7 +83,7 @@ const UploadCV = () => {
   return (
     <div className="upload-cv-container">
       <h1>Déposer mon CV</h1>
-      <p className="subtitle">Formats acceptés: PDF, DOCX, JPG, PNG (Max 5MB)</p>
+      <p className="subtitle">Formats acceptés: PDF, DOCX, JPG, PNG (Max 10MB)</p>
 
       <div className="upload-card">
         {!file ? (

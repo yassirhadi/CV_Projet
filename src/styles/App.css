@@ -363,6 +363,164 @@ body {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 2rem;
+  animation: adminFadeIn 0.5s ease;
+}
+
+@keyframes adminFadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-header-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-header-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.admin-header-content .admin-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.admin-welcome {
+  font-size: 1.05rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.admin-welcome span {
+  font-weight: 600;
+  color: var(--dark-color);
+  -webkit-text-fill-color: unset;
+}
+
+.admin-loading {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 200px;
+}
+
+.loader-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(102, 126, 234, 0.2);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: adminSpinner 0.8s linear infinite;
+}
+
+@keyframes adminSpinner {
+  to { transform: rotate(360deg); }
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.admin-stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 1.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.15);
+}
+
+.admin-stat-users::before { background: linear-gradient(180deg, #667eea, #764ba2); opacity: 1; }
+.admin-stat-admins::before { background: linear-gradient(180deg, #ef4444, #dc2626); opacity: 1; }
+.admin-stat-cvs::before { background: linear-gradient(180deg, #10b981, #059669); opacity: 1; }
+
+.admin-stat-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-stat-users .admin-stat-icon-wrap {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+}
+
+.admin-stat-users .admin-stat-icon { color: #667eea; font-size: 1.6rem; }
+
+.admin-stat-admins .admin-stat-icon-wrap { background: rgba(239, 68, 68, 0.12); }
+.admin-stat-admins .admin-stat-icon { color: #ef4444; font-size: 1.6rem; }
+
+.admin-stat-cvs .admin-stat-icon-wrap { background: rgba(16, 185, 129, 0.12); }
+.admin-stat-cvs .admin-stat-icon { color: #10b981; font-size: 1.6rem; }
+
+.admin-stat-body { flex: 1; min-width: 0; }
+
+.admin-stat-body h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-stat-number {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.admin-stat-detail {
+  display: block;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-top: 0.5rem;
 }
 
 .admin-header {
@@ -707,6 +865,304 @@ body {
   }
 }
 
+/* Upload CV - Page étudiant (style amélioré) */
+.upload-cv-container {
+  max-width: 600px;
+  margin: 2.5rem auto;
+  padding: 0 2rem;
+  animation: uploadFadeIn 0.5s ease-out;
+}
+
+@keyframes uploadFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.upload-cv-container h1 {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.upload-cv-container .subtitle {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  color: #475569;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.upload-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2.25rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 50px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(13, 148, 136, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(180deg, #0d9488 0%, #14b8a6 100%);
+  border-radius: 5px 0 0 5px;
+}
+
+.upload-card:hover {
+  box-shadow: 0 8px 15px rgba(0,0,0,0.05), 0 25px 60px rgba(15, 23, 42, 0.1);
+  transform: translateY(-2px);
+  border-color: rgba(13, 148, 136, 0.2);
+}
+
+.upload-area {
+  border: 2.5px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  position: relative;
+}
+
+.upload-area::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(circle at center, rgba(13, 148, 136, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.upload-area:hover {
+  border-color: #0d9488;
+  background: linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%);
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.06);
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  cursor: pointer;
+  color: #64748b;
+  transition: color 0.2s ease;
+}
+
+.upload-label:hover {
+  color: #0d9488;
+}
+
+.upload-icon {
+  font-size: 4rem;
+  color: #0d9488;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 4px 8px rgba(13, 148, 136, 0.15));
+}
+
+.upload-area:hover .upload-icon {
+  transform: scale(1.08) translateY(-2px);
+  opacity: 1;
+}
+
+.upload-label span {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.upload-hint {
+  font-size: 0.9rem !important;
+  opacity: 0.85;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.file-preview {
+  padding: 0.5rem 0;
+  animation: uploadFadeIn 0.35s ease-out;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+  transition: box-shadow 0.25s ease;
+}
+
+.file-info:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.file-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.file-icon.pdf { color: #ef4444; }
+.file-icon.word { color: #2563eb; }
+.file-icon.image { color: #10b981; }
+
+.file-details h3 {
+  margin: 0 0 0.35rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.file-details p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.upload-success {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+  border-radius: 16px;
+  color: #0d9488;
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  animation: uploadFadeIn 0.4s ease-out;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+}
+
+.success-icon {
+  font-size: 3.25rem;
+  margin-bottom: 0.75rem;
+  color: #0d9488;
+  filter: drop-shadow(0 2px 8px rgba(13, 148, 136, 0.25));
+}
+
+.upload-success p {
+  font-weight: 700;
+  margin: 0 0 0.3rem 0;
+  font-size: 1.1rem;
+  color: #0f766e;
+}
+
+.upload-success small {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.upload-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.btn-upload {
+  padding: 0.85rem 1.75rem;
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+}
+
+.btn-upload:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4);
+}
+
+.btn-upload:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-cancel {
+  padding: 0.85rem 1.75rem;
+  background: #fff;
+  color: #64748b;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  border-color: #f87171;
+  color: #dc2626;
+  background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);
+}
+
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive Upload CV */
+@media (max-width: 768px) {
+  .upload-cv-container {
+    padding: 0 1.25rem;
+    margin: 1.5rem auto;
+  }
+  .upload-cv-container h1 {
+    font-size: 1.65rem;
+  }
+  .upload-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+  .upload-area {
+    padding: 2.5rem 1.25rem;
+    border-radius: 12px;
+  }
+  .upload-icon {
+    font-size: 3.25rem;
+  }
+  .upload-actions {
+    flex-direction: column;
+  }
+  .btn-upload, .btn-cancel {
+    width: 100%;
+  }
+}
+
 /* Loading */
 .loading {
   text-align: center;
@@ -731,6 +1187,22 @@ body {
   }
   
   .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-dashboard {
+    padding: 0 1rem;
+  }
+  
+  .admin-header-card {
+    padding: 1.5rem 1.25rem;
+  }
+  
+  .admin-header-content .admin-title {
+    font-size: 1.4rem;
+  }
+  
+  .admin-stats-grid {
     grid-template-columns: 1fr;
   }
   

@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FaFileAlt, FaChartLine, FaStar, FaLock } from 'react-icons/fa';
+import { FaFileAlt, FaLock } from 'react-icons/fa';
+import api from '../../services/api';
 
 const DashboardEtudiant = () => {
   const { user } = useAuth();
   const [cvCount, setCvCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = parseInt(localStorage.getItem('cvCount') || '0', 10);
-    setCvCount(isNaN(stored) ? 0 : stored);
+    const fetchCvCount = async () => {
+      try {
+        const res = await api.get('/cvs/mon-nombre');
+        setCvCount(res.data.count || 0);
+      } catch (error) {
+        setCvCount(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCvCount();
   }, []);
 
   return (
@@ -19,8 +30,8 @@ const DashboardEtudiant = () => {
         <div className="stat-card">
           <FaFileAlt className="stat-icon" />
           <div className="stat-info">
-            <h3>Total CVs déposés</h3>
-            <p className="stat-number">{cvCount}</p>
+            <h3>Mes CVs déposés</h3>
+            <p className="stat-number">{loading ? '...' : cvCount}</p>
           </div>
         </div>
       </div>

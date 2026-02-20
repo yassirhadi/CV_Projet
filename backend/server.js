@@ -452,29 +452,91 @@ app.get('/api/admin/stats', async (req, res) => {
 });
 
 // ============================================
-// GESTION DES CVs (simulée)
+// Middleware JWT pour routes protégées
 // ============================================
-app.post('/api/cvs/upload', async (req, res) => {
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Token requis' });
+  }
+  const token = authHeader.split(' ')[1];
   try {
+    const decoded = jwt.verify(token, 'secret_key_temporaire');
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: 'Token invalide ou expiré' });
+  }
+};
+
+// ============================================
+// GESTION DES CVs
+// ============================================
+app.post('/api/cvs/upload', authMiddleware, async (req, res) => {
+  try {
+    const { id, role } = req.user;
+    
+    if (role === 'ADMIN') {
+      return res.status(403).json({ message: 'Les administrateurs ne peuvent pas déposer de CV' });
+    }
+
+    const nomFichier = req.body.nomFichier || 'cv.pdf';
+    const formatCV = (nomFichier.split('.').pop() || 'PDF').toUpperCase();
+    const scoreGeneral = Math.round((Math.random() * 30 + 70) * 100) / 100;
+
+    await db.promise().query(
+      'INSERT INTO cv (idEtudiant, nomFichier, dateUpload, scoreGeneral, formatCV) VALUES (?, ?, NOW(), ?, ?)',
+      [id, nomFichier, scoreGeneral, formatCV]
+    );
+
+    const [result] = await db.promise().query('SELECT LAST_INSERT_ID() as id');
+    const cvId = result[0].id;
+
     res.json({
-      id: Math.floor(Math.random() * 1000),
-      nomFichier: req.body.nomFichier || 'cv.pdf',
+      id: cvId,
+      nomFichier,
       dateUpload: new Date().toISOString(),
-      scoreGeneral: Math.floor(Math.random() * 30) + 70,
+      scoreGeneral,
+      format: formatCV,
       message: 'CV uploadé avec succès'
     });
   } catch (error) {
+    console.error('❌ Erreur upload CV:', error);
     res.status(500).json({ message: 'Erreur upload CV' });
   }
 });
 
-app.get('/api/cvs/mes-cvs', async (req, res) => {
+// Nombre de CVs de l'étudiant connecté
+app.get('/api/cvs/mon-nombre', authMiddleware, async (req, res) => {
   try {
-    res.json([
-      { id: 1, nomFichier: 'CV_2025.pdf', dateUpload: '2025-01-15', scoreGeneral: 85, format: 'PDF' },
-      { id: 2, nomFichier: 'CV_Stage.docx', dateUpload: '2025-02-10', scoreGeneral: 92, format: 'DOCX' }
-    ]);
+    const { id, role } = req.user;
+    if (role === 'ADMIN') {
+      return res.status(403).json({ message: 'Réservé aux étudiants' });
+    }
+    const [[row]] = await db.promise().query(
+      'SELECT COUNT(*) as count FROM cv WHERE idEtudiant = ?',
+      [id]
+    );
+    res.json({ count: row.count });
   } catch (error) {
+    console.error('❌ Erreur count CVs:', error);
+    res.status(500).json({ message: 'Erreur récupération nombre CVs' });
+  }
+});
+
+app.get('/api/cvs/mes-cvs', authMiddleware, async (req, res) => {
+  try {
+    const { id, role } = req.user;
+    if (role === 'ADMIN') {
+      return res.status(403).json({ message: 'Réservé aux étudiants' });
+    }
+    const [cvs] = await db.promise().query(
+      'SELECT id, nomFichier, dateUpload, scoreGeneral, formatCV as format FROM cv WHERE idEtudiant = ? ORDER BY dateUpload DESC',
+      [id]
+    );
+    res.json(cvs);
+  } catch (error) {
+    console.error('❌ Erreur récupération CVs:', error);
     res.status(500).json({ message: 'Erreur récupération CVs' });
   }
 });
